@@ -1,0 +1,73 @@
+﻿
+using System;
+
+class Ex4
+{
+    static void Main()
+    {
+        string a = fractionToSystem(123.3,16, 10);
+        Console.WriteLine(a);
+        Console.ReadKey();
+    }
+
+    static string fractionToSystem(double fraction, int system, int accuracy)
+    {
+
+        if (system<2 || system > 36)
+        {
+            throw new ArgumentException("Number system must be from 2 to 36", nameof(system));
+        }
+
+   
+        fraction = Math.Abs(fraction);
+
+        int whole = (int)fraction;
+        double small = fraction - whole;
+
+
+        return (fraction < 0 ? "-" : "") + wholeToSystem(whole, system) +"."+ smallToSystem(small, system, accuracy);
+
+    }
+
+    static string wholeToSystem(int fraction, int system)
+    {
+        string result = "";
+
+        while (fraction>0)
+        {
+            int code = fraction % system;
+            fraction /= system;
+
+            if (code > 9) code += 7;
+            code += 48;
+
+            result = (char)code + result;
+        }
+
+        return result;
+    }
+
+    static string smallToSystem(double fraction, int system, int accuracy)
+    {
+        string result = "";
+        double epsilon = 1e-7;
+
+        for (int i = 0; i <= accuracy && fraction>epsilon; i++)
+        {
+            fraction *= system;
+            double code = Math.Floor(fraction);
+            fraction -= Math.Floor(fraction);
+
+            if (code > 10) code += 7;
+            code += 48;
+
+            result += (char)code;
+        }
+        return result;
+    }
+
+   
+
+
+
+}
